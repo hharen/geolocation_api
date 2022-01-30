@@ -65,13 +65,18 @@ class GeolocationObjectsController < ApplicationController
   # Response
   #
   # Status: 200 OK
-  # If object is not in the database it will return 404 Not Found
+  # If object is not found it will return 404 Not Found
 
   def destroy
     geolocation_object = find_object(params)
     if geolocation_object.present?
-      geolocation_object.destroy
-      respond_json(status: :ok)
+      begin
+        geolocation_object.destroy
+        respond_json(status: :ok)
+      rescue Exception => e
+        Rails.logger.debug { "Couldn't delete the object" }
+        respond_json(status: :internal_server_error)
+      end
     else
       respond_json(status: :not_found)
     end
@@ -97,6 +102,4 @@ end
 # Errors:
 # what if service provider is down?
 
-#Add? Accept: application/vnd.api+json
-
-# should I check if ip from query is same as ip from ipstack?
+# Add? Accept: application/vnd.api+json
