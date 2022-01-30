@@ -32,14 +32,14 @@ class GeolocationObjectsController < ApplicationController
   # {object data}
   # If object can't be saved it returns 422
   def create
-    ip = params[:query]
+    query = params[:query]
 
-    uri = URI("#{SERVICE_PROVIDER}/#{ip}?access_key=#{API_KEY}")
+    uri = URI("#{SERVICE_PROVIDER}/#{query}?access_key=#{API_KEY}")
     response = Net::HTTP.get_response(uri)
     body = JSON.parse(response.body).with_indifferent_access
 
     geolocation_object = GeolocationObject.new(
-      url: body[:url],
+      url: query == body[:ip] ? nil : query, # return url from query if query is not ip address
       ip: body[:ip],
       ip_type: body[:type],
       continent_code: body[:continent_code],
