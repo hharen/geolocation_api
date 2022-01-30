@@ -5,7 +5,7 @@ class GeolocationObjectsController < ApplicationController
   SERVICE_PROVIDER = 'http://api.ipstack.com/'
   API_KEY = ENV['ip_stack_api_key']
 
-  def index
+  def get_an_object
     geolocation_object = GeolocationObject.find_by(ip: params['query'])
 
     if geolocation_object.present?
