@@ -5,8 +5,8 @@ class GeolocationObjectsController < ApplicationController
   SERVICE_PROVIDER = 'http://api.ipstack.com/'
   API_KEY = ENV['ip_stack_api_key']
 
-  def get_an_object
-    geolocation_object = GeolocationObject.find_by(ip: params['query'])
+  def get_object
+    geolocation_object = find_object(params)
 
     if geolocation_object.present?
       respond_json(status: :ok, response: geolocation_object)
@@ -44,7 +44,7 @@ class GeolocationObjectsController < ApplicationController
   end
 
   def destroy
-    geolocation_object = GeolocationObject.find_by(ip: params['query'])
+    geolocation_object = find_object(params)
     if geolocation_object.present?
       geolocation_object.destroy
       respond_json(status: :ok)
@@ -54,6 +54,10 @@ class GeolocationObjectsController < ApplicationController
   end
 
   private 
+
+  def find_object(params)
+    GeolocationObject.find_by(ip: params['query']) || GeolocationObject.find_by(url: params['query'])
+  end
 
   def respond_json(status: :ok, response: nil, content_type: {"Content-Type" => "application/vnd.api+json"})
     if response.present?

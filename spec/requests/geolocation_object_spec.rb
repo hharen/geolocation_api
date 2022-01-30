@@ -5,39 +5,70 @@ RSpec.describe 'GeolocationObject', :type => :request do
 
   let(:headers) { { "ACCEPT" => "application/vnd.api+json" } }
 
-  context 'with valid query' do
-    it 'returns correct geolocation object' do
-      get '/geolocation_objects/?query=84.254.92.149', :headers => headers
-      body = JSON.parse(response.body).with_indifferent_access
+  describe '#get_object' do
+    context 'with valid query' do
+      it 'returns correct geolocation object based on ip address' do
+        get '/geolocation_objects/?query=84.254.92.149', :headers => headers
+        body = JSON.parse(response.body).with_indifferent_access
 
-      expect(response.content_type).to eq("application/json; charset=utf-8")
-      expect(response).to have_http_status(:ok)
-      expect(body).to have_key('data')
-      expect(body.dig(:data, :ip)).to eq('84.254.92.149')
+        expect(response.content_type).to eq("application/json; charset=utf-8")
+        expect(response).to have_http_status(:ok)
+        expect(body).to have_key('data')
+        expect(body.dig(:data, :ip)).to eq('84.254.92.149')
+      end
+
+      it 'returns correct geolocation object based on url' do
+        get '/geolocation_objects/?query=professional.ch', :headers => headers
+        body = JSON.parse(response.body).with_indifferent_access
+
+        expect(response.content_type).to eq("application/json; charset=utf-8")
+        expect(response).to have_http_status(:ok)
+        expect(body).to have_key('data')
+        expect(body.dig(:data, :ip)).to eq('34.65.137.34')
+      end
     end
 
-    it 'deletes geolocation object' do
-      delete '/geolocation_objects/?query=84.254.92.149', :headers => headers
+    context 'with invalid query' do
+      it 'returns 404' do
+        get '/geolocation_objects/?query=not-a-valid-query', :headers => headers
 
-      expect(response.content_type).to eq("application/vnd.api+json")
-      expect(response).to have_http_status(:ok)
+        expect(response.content_type).to eq("application/vnd.api+json")
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).to eq('')
+      end
     end
   end
 
-  context 'with invalid query' do
-    it 'returns 404' do
-      get '/geolocation_objects/?query=not-a-valid-query', :headers => headers
+  describe '#destroy' do
+    context 'with valid query' do
+      it 'deletes geolocation object based on ip' do
+        expect do
+          delete '/geolocation_objects/?query=84.254.92.149', :headers => headers
+        end.to change(GeolocationObject, :count).by(-1)
 
-      expect(response.content_type).to eq("application/vnd.api+json")
-      expect(response).to have_http_status(:not_found)
-      expect(response.body).to eq('')
+        expect(response.content_type).to eq("application/vnd.api+json")
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'deletes geolocation object based on url' do
+        expect do
+          delete '/geolocation_objects/?query=professional.ch', :headers => headers
+        end.to change(GeolocationObject, :count).by(-1)
+
+        expect(response.content_type).to eq("application/vnd.api+json")
+        expect(response).to have_http_status(:ok)
+      end
     end
 
-    it 'deletes geolocation object' do
-      delete '/geolocation_objects/?query=not-a-valid-query', :headers => headers
+    context 'with invalid query' do
+      it 'does not delete geolocation object' do
+        expect do
+          delete '/geolocation_objects/?query=not-a-valid-query', :headers => headers
+        end.not_to change(GeolocationObject, :count)
 
-      expect(response.content_type).to eq("application/vnd.api+json")
-      expect(response).to have_http_status(:not_found)
+        expect(response.content_type).to eq("application/vnd.api+json")
+        expect(response).to have_http_status(:not_found)
+      end
     end
   end
 end
