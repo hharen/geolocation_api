@@ -43,6 +43,16 @@ class GeolocationObjectsController < ApplicationController
     end
   end
 
+  def destroy
+    geolocation_object = GeolocationObject.find_by(ip: params['query'])
+    if geolocation_object.present?
+      geolocation_object.destroy
+      respond_json(status: :ok)
+    else
+      respond_json(status: :not_found) # ADD SOME SENSIBLE ERROR MESSAGE?
+    end
+  end
+
   private 
 
   def respond_json(status: :ok, response: nil, content_type: {"Content-Type" => "application/vnd.api+json"})
@@ -53,3 +63,15 @@ class GeolocationObjectsController < ApplicationController
     end
   end
 end
+
+# TO DO:
+# Errors:
+# query can't be null
+# what if service provider is down?
+
+#Add? Accept: application/vnd.api+json
+
+# should I check if ip from query is same as ip from ipstack?
+# Dont' save duplicates
+# HANDLE URL
+
