@@ -12,10 +12,10 @@
 
 ActiveRecord::Schema.define(version: 2022_01_29_223316) do
 
-  create_table "geolocation_data", force: :cascade do |t|
+  create_table "geolocation_objects", force: :cascade do |t|
     t.string "url"
-    t.string "ip"
-    t.string "type"
+    t.string "ip", null: false
+    t.string "ip_type"
     t.float "latitude"
     t.float "longitude"
     t.string "continent_code"

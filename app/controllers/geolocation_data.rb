@@ -1,2 +1,0 @@
-class GeolocationData < ApplicationController
-end

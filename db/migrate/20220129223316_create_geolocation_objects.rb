@@ -1,9 +1,9 @@
-class CreateGeolocationData < ActiveRecord::Migration[7.0]
+class CreateGeolocationObjects < ActiveRecord::Migration[7.0]
   def change
-    create_table :geolocation_data do |t|
+    create_table :geolocation_objects do |t|
       t.string :url
       t.string :ip, null: false
-      t.string :type
+      t.string :ip_type
       t.float :latitude
       t.float :longitude
       t.string :continent_code

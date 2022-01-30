@@ -6,9 +6,9 @@
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
 
-GeolocationData.create(
+GeolocationObject.create(
   ip: "84.254.92.149",
-  type: "ipv4",
+  ip_type: "ipv4",
   continent_code: "EU",
   continent_name: "Europe",
   country_code: "CH",
@@ -21,10 +21,10 @@ GeolocationData.create(
   longitude: 8.477149963378906
 )
 
-GeolocationData.create(
+GeolocationObject.create(
   url: "professional.ch",
   ip: "34.65.137.34",
-  type: "ipv4",
+  ip_type: "ipv4",
   continent_code: "EU",
   continent_name: "Europe",
   country_code: "CH",
@@ -35,10 +35,10 @@ GeolocationData.create(
   zip: 8043
 )
 
-GeolocationData.create(
+GeolocationObject.create(
   url: "momslearntocode.com",
   ip: "185.199.109.153",
-  type: "ipv4",
+  ip_type: "ipv4",
   continent_code: "NA",
   continent_name: "North America",
   country_code: "US",
