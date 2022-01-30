@@ -80,6 +80,7 @@ class GeolocationObjectsController < ApplicationController
   private 
 
   def find_object(params)
+    return nil if params['query'].nil?
     GeolocationObject.find_by(ip: params['query']) || GeolocationObject.find_by(url: params['query'])
   end
 
@@ -94,10 +95,8 @@ end
 
 # TO DO:
 # Errors:
-# query can't be null
 # what if service provider is down?
 
 #Add? Accept: application/vnd.api+json
 
 # should I check if ip from query is same as ip from ipstack?
-# Don't save duplicates

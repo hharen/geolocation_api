@@ -69,6 +69,15 @@ RSpec.describe 'GeolocationObject', :type => :request do
         expect(response.content_type).to eq("application/vnd.api+json")
         expect(response).to have_http_status(:not_found)
       end
+
+      it 'does not delete geolocation object without query' do
+        expect do
+          delete '/geolocation_objects/', :headers => headers
+        end.not_to change(GeolocationObject, :count)
+
+        expect(response.content_type).to eq("application/vnd.api+json")
+        expect(response).to have_http_status(:not_found)
+      end
     end
   end
 end
