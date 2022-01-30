@@ -5,6 +5,14 @@ class GeolocationObjectsController < ApplicationController
   SERVICE_PROVIDER = 'http://api.ipstack.com/'
   API_KEY = ENV['ip_stack_api_key']
 
+  # Get an object
+  #
+  # GET /geolocation_objects/{query}
+  # Response
+  #
+  # Status: 200 OK
+  # {object data}
+  # Objects that are not on the server will return a 404 Not Found.
   def get_object
     geolocation_object = find_object(params)
 
@@ -15,6 +23,14 @@ class GeolocationObjectsController < ApplicationController
     end
   end
 
+  # Create an object
+  #
+  # POST /geolocation_objects/{query}
+  # Response
+  #
+  # Status: 201 CREATED
+  # {object data}
+  # If object can't be saved it returns 422
   def create
     ip = params[:query]
 
@@ -43,13 +59,21 @@ class GeolocationObjectsController < ApplicationController
     end
   end
 
+  # Delete an object
+  #
+  # DELETE /geolocation_objects/{query}
+  # Response
+  #
+  # Status: 200 OK
+  # If object is not in the database it will return 404 Not Found
+
   def destroy
     geolocation_object = find_object(params)
     if geolocation_object.present?
       geolocation_object.destroy
       respond_json(status: :ok)
     else
-      respond_json(status: :not_found) # ADD SOME SENSIBLE ERROR MESSAGE?
+      respond_json(status: :not_found)
     end
   end
 
@@ -76,6 +100,4 @@ end
 #Add? Accept: application/vnd.api+json
 
 # should I check if ip from query is same as ip from ipstack?
-# Dont' save duplicates
-# HANDLE URL
-
+# Don't save duplicates

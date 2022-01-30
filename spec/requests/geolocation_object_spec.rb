@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe 'GeolocationObject', :type => :request do
   fixtures :all
 
-  let(:headers) { { "ACCEPT" => "application/vnd.api+json" } }
+  let(:headers) { { "Accept" => "application/vnd.api+json" } }
 
   describe '#get_object' do
     context 'with valid query' do
