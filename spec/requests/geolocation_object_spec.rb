@@ -84,7 +84,7 @@ RSpec.describe 'GeolocationObject', :type => :request do
           post '/geolocation_objects/', :headers => headers
         end.not_to change(GeolocationObject, :count)
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:service_unavailable)
       end
     end
   end

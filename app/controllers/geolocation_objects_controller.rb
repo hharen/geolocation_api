@@ -38,6 +38,8 @@ class GeolocationObjectsController < ApplicationController
   def create
     query = params[:query]
     body = provider_response(query)
+    return if body.nil?
+
     geolocation_object = prepare_geolocation_object(query, body)
 
     if geolocation_object.save
