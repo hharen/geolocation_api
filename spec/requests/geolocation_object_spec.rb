@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe 'GeolocationObject', :type => :request do
   fixtures :all
 
-  let(:headers) { { "Accept" => "application/vnd.api+json" } }
+  let(:headers) { { 'Accept' => 'application/vnd.api+json', 'Authorization' => ENV['authorization_token'] } }
 
   describe '#get_object' do
     context 'with valid query' do
@@ -34,6 +34,16 @@ RSpec.describe 'GeolocationObject', :type => :request do
 
         expect(response.content_type).to eq("application/vnd.api+json")
         expect(response).to have_http_status(:not_found)
+        expect(response.body).to eq('')
+      end
+    end
+
+    context 'with invalid token' do
+      headers_invalid_token = { 'Accept' => 'application/vnd.api+json', 'Authorization' => 'incorrect-token' }
+      it 'returns 401' do
+        get '/geolocation_objects/?query=not-a-valid-query', :headers =>  headers_invalid_token
+
+        expect(response).to have_http_status(:unauthorized)
         expect(response.body).to eq('')
       end
     end

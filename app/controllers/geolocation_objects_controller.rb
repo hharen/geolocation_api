@@ -5,6 +5,8 @@ class GeolocationObjectsController < ApplicationController
   SERVICE_PROVIDER = 'http://api.ipstack.com/'
   API_KEY = ENV['ip_stack_api_key']
 
+  before_action :check_token
+
   # Get an object
   #
   # GET /geolocation_objects/{query}
@@ -103,6 +105,12 @@ class GeolocationObjectsController < ApplicationController
       render status: status, headers: content_type, json: { data: response }
     else
       head status, content_type
+    end
+  end
+
+  def check_token
+    unless request.headers['Authorization'] == ENV['authorization_token']
+      respond_json(status: :unauthorized)
     end
   end
 end
