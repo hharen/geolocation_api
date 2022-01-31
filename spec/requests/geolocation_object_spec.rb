@@ -5,7 +5,7 @@ RSpec.describe 'GeolocationObject', :type => :request do
 
   let(:headers) { { 'Accept' => 'application/vnd.api+json', 'Authorization' => ENV['authorization_token'] } }
 
-  describe '#get_object' do
+  describe '#object' do
     context 'with valid query' do
       it 'returns correct geolocation object based on ip address' do
         get '/geolocation_objects/?query=84.254.92.149', :headers => headers
