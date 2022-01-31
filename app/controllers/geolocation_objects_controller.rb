@@ -83,7 +83,8 @@ class GeolocationObjectsController < ApplicationController
   end
 
   def prepare_geolocation_object(query, body)
-    return GeolocationObject.new() if body.nil?
+    return GeolocationObject.new if body.nil?
+
     GeolocationObject.new(
       url: query == body[:ip] ? nil : query, # return url from query if query is not ip address
       ip: body[:ip],
