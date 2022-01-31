@@ -34,9 +34,16 @@ class GeolocationObjectsController < ApplicationController
   def create
     query = params[:query]
 
-    uri = URI("#{SERVICE_PROVIDER}/#{query}?access_key=#{API_KEY}")
-    response = Net::HTTP.get_response(uri)
-    body = JSON.parse(response.body).with_indifferent_access
+    begin
+      uri = URI("#{SERVICE_PROVIDER}/#{query}?access_key=#{API_KEY}")
+      response = Net::HTTP.get_response(uri)
+      body = JSON.parse(response.body).with_indifferent_access
+    rescue Exception => e
+      logger.error e.message
+      logger.error e.backtrace.join("\n")
+      respond_json(status: :service_unavailable) # if service provider is down
+      return
+    end
 
     geolocation_object = GeolocationObject.new(
       url: query == body[:ip] ? nil : query, # return url from query if query is not ip address
@@ -71,10 +78,12 @@ class GeolocationObjectsController < ApplicationController
     geolocation_object = find_object(params)
     if geolocation_object.present?
       begin
-        geolocation_object.destroy
+        geolocation_object.destroy!
         respond_json(status: :ok)
       rescue Exception => e
-        Rails.logger.debug { "Couldn't delete the object" }
+        Rails.logger.debug { "Couldn't delete the object." }
+        logger.error e.message
+        logger.error e.backtrace.join("\n")
         respond_json(status: :internal_server_error)
       end
     else
