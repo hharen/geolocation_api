@@ -49,6 +49,46 @@ RSpec.describe 'GeolocationObject', :type => :request do
     end
   end
 
+  describe '#create' do
+    context 'with valid query' do
+      it 'creates geolocation object based on ip' do
+        expect do
+          post '/geolocation_objects/?query=194.40.230.0', :headers => headers
+        end.to change(GeolocationObject, :count).by(1)
+
+        expect(response.content_type).to eq("application/vnd.api+json")
+        expect(response).to have_http_status(:created)
+      end
+
+      it 'creates geolocation object based on url' do
+        expect do
+          post '/geolocation_objects/?query=rubymonstas.ch', :headers => headers
+        end.to change(GeolocationObject, :count).by(1)
+
+        expect(response).to have_http_status(:created)
+      end
+    end
+
+    context 'with invalid query' do
+      it 'does not create geolocation object' do
+        expect do
+          post '/geolocation_objects/?query=not-a-valid-query', :headers => headers
+        end.not_to change(GeolocationObject, :count)
+
+        expect(response.content_type).to eq("application/vnd.api+json")
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it 'does not create geolocation object without query' do
+        expect do
+          post '/geolocation_objects/', :headers => headers
+        end.not_to change(GeolocationObject, :count)
+
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+    end
+  end
+
   describe '#destroy' do
     context 'with valid query' do
       it 'deletes geolocation object based on ip' do

@@ -37,9 +37,7 @@ class GeolocationObjectsController < ApplicationController
   # If object can't be saved it returns 422
   def create
     query = params[:query]
-
     body = provider_response(query)
-
     geolocation_object = prepare_geolocation_object(query, body)
 
     if geolocation_object.save
@@ -85,6 +83,7 @@ class GeolocationObjectsController < ApplicationController
   end
 
   def prepare_geolocation_object(query, body)
+    return GeolocationObject.new() if body.nil?
     GeolocationObject.new(
       url: query == body[:ip] ? nil : query, # return url from query if query is not ip address
       ip: body[:ip],

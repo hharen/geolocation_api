@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "articles#index"
 
-  resources :geolocation_objects, only: %i[create]
+  resources :geolocation_objects, only: :create
   get 'geolocation_objects', to: 'geolocation_objects#object'
   delete 'geolocation_objects', to: 'geolocation_objects#destroy'
 end
