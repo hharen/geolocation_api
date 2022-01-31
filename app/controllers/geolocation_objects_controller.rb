@@ -75,7 +75,6 @@ class GeolocationObjectsController < ApplicationController
   #
   # Status: 200 OK
   # If object is not found it will return 404 Not Found
-
   def destroy
     geolocation_object = find_object(params)
     if geolocation_object.present?
@@ -114,9 +113,3 @@ class GeolocationObjectsController < ApplicationController
     end
   end
 end
-
-# TO DO:
-# Errors:
-# what if service provider is down?
-
-# Add? Accept: application/vnd.api+json
