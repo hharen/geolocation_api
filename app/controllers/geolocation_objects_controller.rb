@@ -121,6 +121,6 @@ class GeolocationObjectsController < ApplicationController
   end
 
   def check_token
-    respond_json(status: :unauthorized) unless request.headers['Authorization'] == ENV['authorization_token']
+    respond_json(status: :unauthorized) unless request.headers['Authorization'] == "Token #{ENV['authorization_token']}"
   end
 end
